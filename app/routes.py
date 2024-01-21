@@ -111,10 +111,16 @@ def download():
             return jsonify({"error": f"No matching stream found for quality: {quality}"}), 404
         
         
-
     if stream_to_download:
         file_name = stream_to_download.default_filename
-        file_path = stream_to_download.download()
+        # Define the directory where you want to save the file
+        tmp_directory = '/tmp'
+
+        # Construct the full path for the file in the /tmp directory
+        file_path = os.path.join(tmp_directory, file_name)
+
+        # Download the file to the specified path
+        stream_to_download.download(output_path=tmp_directory, filename=file_name)
 
         suggested_filename = f"{file_name}.mp3" if is_audio else f"{file_name}.mp4"
         
@@ -125,4 +131,3 @@ def download():
         return send_file(file_path, as_attachment=True, download_name=suggested_filename)
     else:
         return jsonify({"error": f"No matching stream found for quality: {quality}"}), 404
-
