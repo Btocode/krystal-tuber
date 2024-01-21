@@ -73,10 +73,11 @@ def suggest_formats():
         }
     }
     
-    # save the response to a json file
-    with open('formats.json', 'w') as f:
+    with open('/tmp/formats.json', 'w') as f:
         json.dump(response, f)
         
+    
+    
 
     return jsonify(response), 200
 
