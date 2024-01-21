@@ -7,7 +7,13 @@ import os
 import threading
 
 bp = Blueprint("main", __name__)
-CORS(bp)
+CORS(
+    bp,
+    origins=["http://localhost:3000", "https://youtube-downloader-frontend.vercel.app"],
+    methods=["GET", "POST"],
+    supports_credentials=True
+    
+)
 
 
 def get_video_and_audio_streams(url):
@@ -41,6 +47,10 @@ def delete_file_after_delay(file_path, delay):
 
     # Start a new thread for the deletion task
     threading.Thread(target=delete_file, daemon=True).start()
+
+@bp.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"success": True}), 200
 
 @bp.route('/suggest_formats', methods=['POST'])
 def suggest_formats():
