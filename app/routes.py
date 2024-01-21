@@ -18,6 +18,14 @@ CORS(
 
 def get_video_and_audio_streams(url):
     yt = YouTube(url)
+    
+    info = {
+        "title": yt.title,
+        "thumbnail_url": yt.thumbnail_url,
+        "length": yt.length,
+        "author": yt.author,
+    }
+    
     audio_streams = []
     video_streams = []
 
@@ -30,8 +38,10 @@ def get_video_and_audio_streams(url):
         video_streams = yt.streams.filter(progressive=True)
     except Exception as e:
         video_streams = []
+        
+    
 
-    return audio_streams, video_streams
+    return audio_streams, video_streams, info
 
 def delete_file_after_delay(file_path, delay):
     def delete_file():
@@ -60,13 +70,14 @@ def suggest_formats():
         return jsonify({"error": "Please provide a 'url' parameter in the request"}), 400
 
     url = data['url']
-    audio_streams, video_streams = get_video_and_audio_streams(url)
+    audio_streams, video_streams, info = get_video_and_audio_streams(url)
         
 
     if len(audio_streams) == 0 and len(video_streams) == 0:
         return jsonify({"error": "No streams found"}), 404
 
     response = {
+        "info": info,
         "formats": {
             "audio": [stream.abr for stream in audio_streams if stream.abr is not None],
             "video": [stream.resolution for stream in video_streams]
