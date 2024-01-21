@@ -9,7 +9,7 @@ import threading
 bp = Blueprint("main", __name__)
 CORS(
     bp,
-    origins=["http://localhost:3000", "https://youtube-downloader-frontend.vercel.app"],
+    origins=["http://localhost:3000", "https://krystaltuber.vercel.app/", "https://krystaltuber.vercel.app"],
     methods=["GET", "POST"],
     supports_credentials=True
     
