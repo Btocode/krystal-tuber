@@ -1,10 +1,11 @@
 from math import isnan
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request, send_file, Response
 from pytube import YouTube
 from flask_cors import CORS
 import json
 import os 
 import threading
+import requests
 
 bp = Blueprint("main", __name__)
 CORS(
@@ -63,6 +64,7 @@ def delete_file_after_delay(file_path, delay):
 def health_check():
     return jsonify({"success": True}), 200
 
+
 @bp.route('/get_location', methods=['GET'])
 def get_location():
     user_ip = request.remote_addr  # Get user's IP address
@@ -71,9 +73,9 @@ def get_location():
     response = requests.get(f"https://ipinfo.io/{user_ip}?token=21c2efe45c2b46")
     
     if response.status_code == 200:
-        return jsonify(response.json()), 200
-    # You can now use data['country_name'] or any relevant field
-    return jsonify({"message": "Location Unavailbale"}), 400
+        return Response(response.text, mimetype='application/json')
+    
+    return Response("error", mimetype='application/json')
 
 
 @bp.route('/suggest_formats', methods=['POST'])
