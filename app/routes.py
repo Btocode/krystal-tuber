@@ -16,6 +16,7 @@ CORS(
 )
 
 
+
 def get_video_and_audio_streams(url):
     yt = YouTube(url)
     
@@ -61,6 +62,19 @@ def delete_file_after_delay(file_path, delay):
 @bp.route('/', methods=['GET'])
 def health_check():
     return jsonify({"success": True}), 200
+
+@bp.route('/get_location', methods=['GET'])
+def get_location():
+    user_ip = request.remote_addr  # Get user's IP address
+    
+    # Make a request to a geolocation API
+    response = requests.get(f"https://ipinfo.io/{user_ip}?token=21c2efe45c2b46")
+    
+    if response.status_code == 200:
+        return jsonify(response.json()), 200
+    # You can now use data['country_name'] or any relevant field
+    return jsonify({"message": "Location Unavailbale"}), 400
+
 
 @bp.route('/suggest_formats', methods=['POST'])
 def suggest_formats():
